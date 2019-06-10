@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Dotnet.Url.Jumper.Aplication.Security
+namespace Dotnet.Url.Jumper.Application.Security
 {   
     public class SecuritySettings
     {
-        public SecuritySchema securitySchema;
+        public string securitySchema { get; set; }
         public string JWTSecret { get; set;}
         public string[] ApiKeys { get; set; }
     }

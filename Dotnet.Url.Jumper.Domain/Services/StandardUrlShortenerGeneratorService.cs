@@ -3,6 +3,7 @@
  * Copyright (c) delight.im (https://www.delight.im/)
  * Licensed under the MIT License (https://opensource.org/licenses/MIT)
  */
+using Dotnet.Url.Jumper.Domain.Exceptions;
 using System.Linq;
 using System.Text;
 
@@ -23,7 +24,7 @@ namespace Dotnet.Url.Jumper.Domain.Services
      * 123456789 <=> pgK8p
      */
     public class StandardUrlShortenerService : IUrlShortenerGeneratorService
-    {
+    {       
         private const string Alphabet = "23456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ-_";
         private static readonly int Base = Alphabet.Length;
 

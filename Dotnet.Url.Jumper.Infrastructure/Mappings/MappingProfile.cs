@@ -7,25 +7,12 @@ namespace Dotnet.Url.Jumper.Infrastructure.Mappings
 {
     public class MappingProfile : Profile
     {
-        public class RepresentanteObsoletoConverter : IValueConverter<string, bool>
-        {
-            public bool Convert(string sourceMember, ResolutionContext context)
-            {
-                switch (sourceMember)
-                {
-                    case "T":
-                        return true;
-                    case "F":
-                        return false;
-                    default:
-                        return true;
-                }
-            }
-        }
-
         public MappingProfile()
-        {            
-
+        {
+            CreateMap<Dotnet.Url.Jumper.Domain.Models.Admin, Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels.DBAdmin>();
+            CreateMap<Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels.DBAdmin, Dotnet.Url.Jumper.Domain.Models.Admin>();
+            CreateMap<Dotnet.Url.Jumper.Domain.Models.ShortUrl, Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels.DbShortUrl>();
+            CreateMap<Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels.DbShortUrl, Dotnet.Url.Jumper.Domain.Models.ShortUrl>();
         }
     }
 }

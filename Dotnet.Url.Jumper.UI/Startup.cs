@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Dotnet.Url.Jumper.Application.Services;
-using Dotnet.Url.Jumper.Aplication;
+using Dotnet.Url.Jumper.Application;
 using Dotnet.Url.Jumper.Infrastructure.Settings;
-using Dotnet.Url.Jumper.Aplication.Security;
+using Dotnet.Url.Jumper.Application.Security;
 using Dotnet.Url.Jumper.UI.Security;
 
 namespace Dotnet.Url.Jumper.UI
@@ -25,11 +25,14 @@ namespace Dotnet.Url.Jumper.UI
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {            
+            services.AddMemoryCache();
             services.AddSingleton(Configuration);
             services.RegisterCurrentSettings(Configuration);           
             services.AddIocRegister();
-            services.AddControllers();
+            services.RegisterRepositories();
+            services.AddMvc().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson();           
             services.AddRazorPages();
             //Important add authentication before MVC
             services.RegisterCurrentSecuritySchema();

@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels
 {
-    public class ShortUrl : CoreDbEntity
+    public class DbShortUrl : CoreDbEntity
     {
         [Required]
         public string OriginalUrl { get; set; }
-        public DbAdmin Owner { get; set; }
-        public DateTime Expiration { get; set; }
+        public string ShortenedUrl { get; set; }
     }
 }

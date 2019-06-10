@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Domain", "Dotnet.Url.Jumper.Domain\Dotnet.Url.Jumper.Domain.csproj", "{08255B4E-EC58-4DF5-BE98-24A2D1C6AD65}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Aplication", "Dotnet.Url.Jumper.Application\Dotnet.Url.Jumper.Aplication.csproj", "{C8EB5F44-4429-4863-8054-7A9BDD42F39F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Application", "Dotnet.Url.Jumper.Application\Dotnet.Url.Jumper.Application.csproj", "{C8EB5F44-4429-4863-8054-7A9BDD42F39F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

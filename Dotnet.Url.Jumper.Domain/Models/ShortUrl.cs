@@ -9,8 +9,7 @@ namespace Dotnet.Url.Jumper.Domain.Models
     {
         public int Id { get; set; }
         public string OriginalUrl { get; set; }
-        public Admin Owner { get; set; }
-        public DateTime Expiration { get; set; }
+        public string ShortenedUrl { get; set; }
         public DateTime AddedDate { set; get; }
         public DateTime ModifiedDate { set; get; }
     }

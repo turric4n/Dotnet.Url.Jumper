@@ -1,6 +1,5 @@
 ﻿using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -15,7 +14,8 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
         public CoreDbContext(IConfiguration configuration) : base()
         {
-            this._connectionString = configuration.GetConnectionString("CoreConnectionString");
+            _connectionString = configuration.GetConnectionString("CoreConnectionString");            
+            this.Database.EnsureCreated();
         }
 
         private DbSet<T> _dbSet => this.Set<T>();
@@ -37,24 +37,64 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             }
         }
 
-        public void Add(T entity)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            this.Add(entity);            
+            optionsBuilder.UseSqlite(_connectionString);
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<T>();
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public T Add(T entity)
+        {
+            try
+            {
+                var ent = _dbSet.AddAsync(entity).Result.Entity;
+                SaveChanges();
+                Entry(ent).State = EntityState.Detached;
+                return ent;
+            }
+            catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }            
+        }
+
+        public T Update(T entity)
+        {
+            try
+            {                               
+                var ent = _dbSet.Update(entity);
+                SaveChanges();              
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
         }
 
         public void AddRange(IEnumerable<T> entities)
         {
-            this.AddRange(entities);
+            _dbSet.AddRange(entities);
+            SaveChanges();
         }
 
         public void Delete(T entity)
         {
-            this.Delete(entity);
+            _dbSet.Remove(entity);
+            SaveChanges();
         }
 
         public void DeleteRange(IEnumerable<T> entities)
         {
-            this.DeleteRange(entities);
+            _dbSet.RemoveRange(entities);
+            SaveChanges();
         }
 
         public override int SaveChanges()
@@ -64,6 +104,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             AddedEntities.ForEach(E =>
             {
                 E.Entity.AddedDate = DateTime.Now;
+                E.Entity.ModifiedDate = DateTime.Now;
             });
 
             var ModifiedEntities = ChangeTracker.Entries<CoreDbEntity>().Where(E => E.State == EntityState.Modified).ToList();
@@ -75,5 +116,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
             return base.SaveChanges();
         }
+
+
     }
 }

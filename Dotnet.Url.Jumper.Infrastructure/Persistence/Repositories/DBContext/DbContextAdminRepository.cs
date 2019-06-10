@@ -14,21 +14,21 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
     public class DbContextAdminRepository : IAdminRepository
     {
         private readonly ILoggerService _loggerservice;
-        private IRepoContext<DbAdmin> _context;
+        private IRepoContext<DbShortUrl> _context;
         private readonly IMapper _mapper;
 
-        public DbContextAdminRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice)
+        public DbContextAdminRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbShortUrl> repoContext)
         {
-
-            _context = new CoreDbContext<DbAdmin>(configuration);
+            _context = repoContext;
             _loggerservice = loggerservice;
             _mapper = mapper;
         }
 
-        public void Add(Admin entity)
+        public Admin Add(Admin entity)
         {
-            var dbentity = _mapper.Map<DbAdmin>(entity);        
+            var dbentity = _mapper.Map<DbShortUrl>(entity);
             _context.Add(dbentity);
+            return _mapper.Map<Admin>(dbentity);
         }
 
         public Admin FindByCreationDate(DateTime creationDate)
@@ -63,10 +63,12 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             throw new NotImplementedException();
         }
 
-        public void Update(Admin entity)
+        public Admin Update(Admin entity)
         {
-            var dbentity = _mapper.Map<DbAdmin>(entity);
+
+            var dbentity = _mapper.Map<DbShortUrl>(entity);
             _context.Add(dbentity);
+            return _mapper.Map<Admin>(dbentity);
         }
     }
 }

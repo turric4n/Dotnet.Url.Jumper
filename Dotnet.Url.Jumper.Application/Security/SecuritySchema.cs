@@ -1,4 +1,4 @@
-﻿namespace Dotnet.Url.Jumper.Aplication.Security
+﻿namespace Dotnet.Url.Jumper.Application.Security
 {
     public enum SecuritySchema
     {

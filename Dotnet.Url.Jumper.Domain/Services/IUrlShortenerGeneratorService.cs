@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Dotnet.Url.Jumper.Domain.Services
 {
-    interface IUrlShortenerGeneratorService
+    public interface IUrlShortenerGeneratorService
     {
         string Encode(int num);
         int Decode(string str);

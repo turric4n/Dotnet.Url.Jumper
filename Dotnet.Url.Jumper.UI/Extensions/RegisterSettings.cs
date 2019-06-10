@@ -1,5 +1,5 @@
-﻿using Dotnet.Url.Jumper.Aplication;
-using Dotnet.Url.Jumper.Aplication.Security;
+﻿using Dotnet.Url.Jumper.Application;
+using Dotnet.Url.Jumper.Application.Security;
 using Dotnet.Url.Jumper.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

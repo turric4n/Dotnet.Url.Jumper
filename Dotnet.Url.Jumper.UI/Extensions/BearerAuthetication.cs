@@ -24,7 +24,7 @@ namespace Dotnet.Url.Jumper.UI.Extensions
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IAdminService>();
+                        var userService = context.HttpContext.RequestServices.GetRequiredService<IShortUrlService>();
                         var userId = int.Parse(context.Principal.Identity.Name);
                         var user = userService.GetById(userId);
                         if (user == null)

@@ -15,7 +15,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.Mocked
             _mapper = mapper;
         }
 
-        public void Add(Admin entity)
+        public Admin Add(Admin entity)
         {
             throw new NotImplementedException();
         }
@@ -54,12 +54,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.Mocked
             throw new NotImplementedException();
         }
 
-        public void Update(Admin entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        Admin IReadRepository<Admin, int>.FindByModificationDate(DateTime modificationDate)
+        public Admin Update(Admin entity)
         {
             throw new NotImplementedException();
         }

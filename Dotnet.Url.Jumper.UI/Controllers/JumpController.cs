@@ -1,18 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Dotnet.Url.Jumper.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Dotnet.Url.Jumper.UI.Controllers
 {
-    [Route("api/[controller]")]
+    [AllowAnonymous]    
     [ApiController]
     public class JumpController : ControllerBase
     {
-        public JumpController()
+        private readonly IShortUrlService _shorturlservice;
+
+        public JumpController(IShortUrlService shorturlservice)
         {
+            _shorturlservice = shorturlservice;
+        }
+
+        [Route("/{path}")]
+        [HttpGet]
+        public IActionResult Get(string path)
+        {
+            try
+            {
+                var url = _shorturlservice.GetByPath(path);
+                HttpContext.Response.Headers.Add("Location", url.OriginalUrl);
+                return new StatusCodeResult(307);
+            }
+            catch
+            {
+                return NotFound();
+            }                       
         }
     }
 }

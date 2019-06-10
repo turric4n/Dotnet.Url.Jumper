@@ -8,6 +8,8 @@ namespace Dotnet.Url.Jumper.Application.Mappings
         {
             CreateMap<Dotnet.Url.Jumper.Application.Models.Admin, Dotnet.Url.Jumper.Domain.Models.Admin>();                                 
             CreateMap<Dotnet.Url.Jumper.Domain.Models.Admin, Dotnet.Url.Jumper.Application.Models.Admin>();
+            CreateMap<Dotnet.Url.Jumper.Application.Models.ShortUrl, Dotnet.Url.Jumper.Domain.Models.ShortUrl>();
+            CreateMap<Dotnet.Url.Jumper.Domain.Models.ShortUrl, Dotnet.Url.Jumper.Application.Models.ShortUrl>();
         }
     }
 }

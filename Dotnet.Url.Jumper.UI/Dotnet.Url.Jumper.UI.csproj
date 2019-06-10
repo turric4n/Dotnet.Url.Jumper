@@ -22,9 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="8.1.0" />
+    <PackageReference Include="AspNet.Security.ApiKey.Providers" Version="1.1.0" />
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview5-19227-01" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview5.19227.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-preview5.19227.1">
@@ -33,10 +35,12 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0-preview5.19227.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0-preview5-19264-04" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Stripe.net" Version="27.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Dotnet.Url.Jumper.Application\Dotnet.Url.Jumper.Aplication.csproj" />
+    <ProjectReference Include="..\Dotnet.Url.Jumper.Application\Dotnet.Url.Jumper.Application.csproj" />
     <ProjectReference Include="..\Dotnet.Url.Jumper.Infrastructure\Dotnet.Url.Jumper.Infrastructure.csproj" />
   </ItemGroup>
 
