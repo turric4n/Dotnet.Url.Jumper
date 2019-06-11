@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Dotnet.Url.Jumper.Domain.Exceptions;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
-using Microsoft.Extensions.Configuration;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 {
@@ -17,7 +17,8 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         private IRepoContext<DbShortUrl> _context;
         private readonly IMapper _mapper;
 
-        public DbContextShortUrlRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbShortUrl> repoContext)
+        public DbContextShortUrlRepository(IMapper mapper, ILoggerService loggerservice, 
+            IRepoContext<DbShortUrl> repoContext)
         {
             _context = repoContext;
             _loggerservice = loggerservice;
@@ -26,64 +27,138 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
         public ShortUrl Add(ShortUrl entity)
         {
-            var dbentity = _mapper.Map<DbShortUrl>(entity);        
-            _context.Add(dbentity);
-            return _mapper.Map<ShortUrl>(dbentity);
+            try
+            {
+                _loggerservice.Info(this.GetType().ToString(), "Adding new ShortURL to repository : " + entity.OriginalUrl + " , ");
+                var dbentity = _mapper.Map<DbShortUrl>(entity);
+                _context.Add(dbentity);
+                _loggerservice.Success(this.GetType().ToString(), "Added new ShortURL to repository : " + entity.OriginalUrl + " , ");
+                return _mapper.Map<ShortUrl>(dbentity);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error adding new ShortUrl into repository. " + ex.Message);
+            }                     
         }
 
         public ShortUrl FindByCreationDate(DateTime creationDate)
         {
-            var shorturl = _context.Entity
-                .Where(e => e.AddedDate == creationDate).First();
-            return _mapper.Map<ShortUrl>(shorturl);
+            try
+            {
+                var shorturl = _context.Entity
+                    .Where(e => e.AddedDate == creationDate)
+                    .First();
+                return _mapper.Map<ShortUrl>(shorturl);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving ShortUrl from repository. " + ex.Message);
+            }
         }
 
         public ShortUrl FindById(int id)
         {
-            var shorturl = _context.Entity
-                .Where(e => e.Id == id).First();
-            return _mapper.Map<ShortUrl>(shorturl);
+            try
+            {
+                var shorturl = _context.Entity
+                    .Where(e => e.Id == id).First();
+                return _mapper.Map<ShortUrl>(shorturl);
+            }
+            catch (Exception ex)
+            {
+
+                throw new RepositoryException("Error retrieving ShortUrl from repository. " + ex.Message);
+            }
         }
 
         public ShortUrl FindByModificationDate(DateTime modificationDate)
         {
-            var shorturl = _context.Entity
-                .Where(e => e.ModifiedDate == modificationDate).First();
-            return _mapper.Map<ShortUrl>(shorturl);
+            try
+            {
+                var shorturl = _context.Entity
+                    .Where(e => e.ModifiedDate == modificationDate).First();
+                return _mapper.Map<ShortUrl>(shorturl);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving ShortUrl from repository. " + ex.Message);
+            }
         }
 
         public IEnumerable<ShortUrl> List()
         {
-            var shorturls = _context.Entity
-                .ToList();
-            return _mapper.Map<IEnumerable<ShortUrl>>(shorturls);
+            try
+            {
+                _loggerservice.Info(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
+                var shorturls = _context.Entity
+                    .ToList();
+                _loggerservice.Success(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
+                return _mapper.Map<IEnumerable<ShortUrl>>(shorturls);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving ShortUrl from repository. " + ex.Message);
+            }
         }
 
         public void Remove(int id)
         {
-            _context.Delete(
-                _context.Entity.Where(x => x.Id == id)
-                .First()
-                );            
+            try
+            {
+                _context.Delete(
+                    _context.Entity
+                    .Where(x => x.Id == id)
+                    .First()
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error while remove ShortUrl from repository. " + ex.Message);
+            } 
         }
 
         public ShortUrl Update(ShortUrl entity)
         {
-            var shorturl = _mapper.Map<DbShortUrl>(entity);
-            _context.Update(shorturl);
-            return _mapper.Map<ShortUrl>(shorturl);
+            try
+            {
+                var shorturl = _mapper.Map<DbShortUrl>(entity);
+                _context.Update(shorturl);
+                return _mapper.Map<ShortUrl>(shorturl);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error updating ShortUrl from repository. " + ex.Message);
+            }
         }
 
         public ShortUrl GetByPath(string Path)
         {
-            var entity = _context.Entity.Where(x => x.ShortenedUrl == Path).First();
-            return _mapper.Map<ShortUrl>(entity);            
+            try
+            {
+                var entity = _context.Entity
+                    .Where(x => x.ShortenedUrl == Path)
+                    .First();
+                return _mapper.Map<ShortUrl>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving ShortUrl from repository from Path. " + ex.Message);
+            }       
         }
 
         public ShortUrl GetByOriginalUrl(string Url)
         {
-            var entity = _context.Entity.Where(x => x.OriginalUrl == Url).First();
-            return _mapper.Map<ShortUrl>(entity);
+            try
+            {
+                var entity = _context.Entity
+                    .Where(x => x.OriginalUrl == Url)
+                    .First();
+                return _mapper.Map<ShortUrl>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving ShortUrl from repository from OriginalUrl. " + ex.Message);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Dotnet.Url.Jumper.Application.Models;
 using Dotnet.Url.Jumper.Domain.Exceptions;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Domain.Services;
+using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Dotnet.Url.Jumper.Application.Services
@@ -12,19 +13,23 @@ namespace Dotnet.Url.Jumper.Application.Services
     {
         private readonly IShortUrlRepository _shortUrlRepository;
         private readonly IMemoryCache _shortUrlCacheService;
+        private readonly ILoggerService _loggerservice;
         private readonly IMapper _mapper;
         private readonly IUrlShortenerGeneratorService _generator;
 
-        public ShortUrlService(IShortUrlRepository shortUrlRepository, IUrlShortenerGeneratorService shorturlgenerator, IMemoryCache shorturlCacheService, IMapper mapper) 
+        public ShortUrlService(IShortUrlRepository shortUrlRepository, IUrlShortenerGeneratorService shorturlgenerator, 
+            IMemoryCache shorturlCacheService, ILoggerService loggerservice, IMapper mapper) 
         {
             _shortUrlCacheService = shorturlCacheService;
+            _loggerservice = loggerservice;
             _shortUrlRepository = shortUrlRepository;
             _generator = shorturlgenerator;
             _mapper = mapper;
         }
 
         public ShortUrl GenerateNew(NewShortUrl newShortUrl)
-        {           
+        {
+            _loggerservice.Info(this.GetType().ToString(), "Generate URL request called : " + newShortUrl.OriginalUrl);
             var shorturl = new ShortUrl()
             {
                 OriginalUrl = newShortUrl.OriginalUrl
