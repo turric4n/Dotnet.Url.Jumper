@@ -26,17 +26,21 @@ namespace Dotnet.Url.Jumper.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {            
+            //Core services
             services.AddMemoryCache();
             services.AddSingleton(Configuration);
-            services.RegisterCurrentSettings(Configuration);           
-            services.AddIocRegister();
-            services.RegisterRepositories();
+            services.RegisterCurrentSettings(Configuration);
+            services.AddHttpContextAccessor();                       
             services.AddMvc().AddNewtonsoftJson();
-            services.AddControllers().AddNewtonsoftJson();           
+            services.AddControllers().AddNewtonsoftJson();               
             services.AddRazorPages();
             //Important add authentication before MVC
             services.RegisterCurrentSecuritySchema();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            //Repositories
+            services.RegisterRepositories();
+            //Own Services
+            services.AddIocRegister();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

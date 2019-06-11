@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Dotnet.Url.Jumper.Application.Models;
 using Dotnet.Url.Jumper.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Dotnet.Url.Jumper.UI.Controllers
 {
@@ -35,9 +37,17 @@ namespace Dotnet.Url.Jumper.UI.Controllers
 
         // POST: api/ShortUrl
         [HttpPost]
-        public ShortUrl Post([FromBody] NewShortUrl newShortUrl)
+        public IActionResult Post([FromBody] NewShortUrl newShortUrl)
         {
-            return _shorturlservice.GenerateNew(newShortUrl);
+            try
+            {
+                return Ok(_shorturlservice.GenerateNew(newShortUrl));
+            }
+            catch(Exception ex)
+            {
+                var exc = ex.InnerException ?? ex;
+                return StatusCode((int)HttpStatusCode.InternalServerError, exc);
+            }            
         } 
     }
 }

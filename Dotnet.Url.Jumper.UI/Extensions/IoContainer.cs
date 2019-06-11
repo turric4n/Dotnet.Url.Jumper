@@ -13,6 +13,8 @@ namespace Dotnet.Url.Jumper.UI.Extensions
             services.AddSingleton<IUrlShortenerGeneratorService, StandardUrlShortenerService>();
             //Application
             services.AddScoped<IShortUrlService, ShortUrlService>();
+            services.AddScoped<IStatsService, ShortUrlStatsService>();
+            services.AddScoped<IVisitorLocatorService, HttpContextVisitorLocatorService>();
             //Infrastructure
             services.AddSingleton<ILoggerService, QuickLoggerService>();            
             services.BuildServiceProvider();

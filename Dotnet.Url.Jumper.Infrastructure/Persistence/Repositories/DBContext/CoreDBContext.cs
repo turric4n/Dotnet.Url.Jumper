@@ -15,7 +15,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         public CoreDbContext(IConfiguration configuration) : base()
         {
             _connectionString = configuration.GetConnectionString("CoreConnectionString");            
-            this.Database.EnsureCreated();
+            this.Database.EnsureCreated();            
         }
 
         private DbSet<T> _dbSet => this.Set<T>();

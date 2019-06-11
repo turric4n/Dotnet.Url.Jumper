@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels
 {
+    [Table("Stats")]
     public class DbStat : CoreDbEntity
     {
-        public DateTime AddedDate { set; get; }
-        public DateTime ModifiedDate { set; get; }
+        [Required]
         public DbShortUrl shortUrl { get; set; }
+        [Required]
         public DbVisitor visitor { get; set; }
     }
 }

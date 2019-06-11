@@ -11,49 +11,49 @@ using Microsoft.Extensions.Configuration;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 {
-    public class DbContextAdminRepository : IAdminRepository
+    public class DbContextVisitorRepository : IVisitorRepository
     {
         private readonly ILoggerService _loggerservice;
-        private IRepoContext<DbShortUrl> _context;
+        private IRepoContext<DbVisitor> _context;
         private readonly IMapper _mapper;
 
-        public DbContextAdminRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbShortUrl> repoContext)
-        {
+        public DbContextVisitorRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbVisitor> repoContext)
+        {            
             _context = repoContext;
             _loggerservice = loggerservice;
             _mapper = mapper;            
         }
 
-        public Admin Add(Admin entity)
+        public Visitor Add(Visitor entity)
         {
-            var dbentity = _mapper.Map<DbShortUrl>(entity);
+            var dbentity = _mapper.Map<DbVisitor>(entity);
             _context.Add(dbentity);
-            return _mapper.Map<Admin>(dbentity);
+            return _mapper.Map<Visitor>(dbentity);
         }
 
-        public Admin FindByCreationDate(DateTime creationDate)
+        public Visitor FindByCreationDate(DateTime creationDate)
         {
             var admin = _context.Entity
                 .Where(e => e.AddedDate == creationDate).First();
-            return _mapper.Map<Admin>(admin);
+            return _mapper.Map<Visitor>(admin);
         }
 
-        public Admin FindById(int id)
+        public Visitor FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Admin FindByModificationDate(DateTime modificationDate)
+        public Visitor FindByModificationDate(DateTime modificationDate)
         {
             throw new NotImplementedException();
         }
 
-        public Admin FindByUsername(string userName)
+        public Visitor FindByUsername(string userName)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Admin> List()
+        public IEnumerable<Visitor> List()
         {
             throw new NotImplementedException();
         }
@@ -63,12 +63,12 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             throw new NotImplementedException();
         }
 
-        public Admin Update(Admin entity)
+        public Visitor Update(Visitor entity)
         {
 
-            var dbentity = _mapper.Map<DbShortUrl>(entity);
+            var dbentity = _mapper.Map<DbVisitor>(entity);
             _context.Add(dbentity);
-            return _mapper.Map<Admin>(dbentity);
+            return _mapper.Map<Visitor>(dbentity);
         }
     }
 }

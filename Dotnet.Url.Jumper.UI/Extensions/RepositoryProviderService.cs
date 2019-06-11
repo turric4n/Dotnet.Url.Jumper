@@ -20,6 +20,8 @@ namespace Dotnet.Url.Jumper.UI.Extensions
                 case DatabaseEngine.EntityFrameworkSQLite:
                     services.AddSingleton<IShortUrlRepository, DbContextShortUrlRepository>();
                     services.AddSingleton<IAdminRepository, DbContextAdminRepository>();
+                    services.AddSingleton<IStatRepository, DbContextStatRepository>();
+                    services.AddSingleton<IVisitorRepository, DbContextVisitorRepository>();
                     services.AddSingleton(typeof(IRepoContext<>), typeof(CoreDbContext<>));
                     break;
                 case DatabaseEngine.SQLServer:

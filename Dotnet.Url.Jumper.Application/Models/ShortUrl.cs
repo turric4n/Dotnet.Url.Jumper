@@ -9,6 +9,7 @@ namespace Dotnet.Url.Jumper.Application.Models
         public int Id { get; set; }
         public string OriginalUrl { get; set; }
         public string ShortenedUrl { get; set; }
+        public int RedirectionCode { get; set; }
         public DateTime AddedDate { set; get; }
         public DateTime ModifiedDate { set; get; }
     }

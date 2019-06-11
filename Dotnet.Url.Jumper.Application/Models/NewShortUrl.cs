@@ -7,5 +7,6 @@ namespace Dotnet.Url.Jumper.Application.Models
     public class NewShortUrl
     {
         public string OriginalUrl { get; set; }
+        public int RedirectionCode { get; set; }
     }
 }
