@@ -8,8 +8,8 @@ namespace Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels
     public class DbStat : CoreDbEntity
     {
         [Required]
-        public DbShortUrl shortUrl { get; set; }
+        public virtual DbShortUrl shortUrl { get; set; }
         [Required]
-        public DbVisitor visitor { get; set; }
+        public virtual DbVisitor visitor { get; set; }
     }
 }

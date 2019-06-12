@@ -5,7 +5,6 @@ using AutoMapper;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
 using Microsoft.Extensions.Configuration;
 
@@ -14,10 +13,10 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
     public class DbContextAdminRepository : IAdminRepository
     {
         private readonly ILoggerService _loggerservice;
-        private IRepoContext<DbShortUrl> _context;
+        private CoreDbContext _context;
         private readonly IMapper _mapper;
 
-        public DbContextAdminRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbShortUrl> repoContext)
+        public DbContextAdminRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, CoreDbContext repoContext)
         {
             _context = repoContext;
             _loggerservice = loggerservice;
@@ -28,12 +27,13 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             var dbentity = _mapper.Map<DbShortUrl>(entity);
             _context.Add(dbentity);
+            _context.SaveChanges();
             return _mapper.Map<Admin>(dbentity);
         }
 
         public Admin FindByCreationDate(DateTime creationDate)
         {
-            var admin = _context.Entity
+            var admin = _context.Admins
                 .Where(e => e.AddedDate == creationDate).First();
             return _mapper.Map<Admin>(admin);
         }
@@ -68,6 +68,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
             var dbentity = _mapper.Map<DbShortUrl>(entity);
             _context.Add(dbentity);
+            _context.SaveChanges();
             return _mapper.Map<Admin>(dbentity);
         }
     }

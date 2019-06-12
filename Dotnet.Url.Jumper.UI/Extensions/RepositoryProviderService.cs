@@ -1,6 +1,4 @@
 ﻿using Dotnet.Url.Jumper.Domain.Repositories;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.SQLContext;
 using Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Settings;
@@ -22,7 +20,7 @@ namespace Dotnet.Url.Jumper.UI.Extensions
                     services.AddSingleton<IAdminRepository, DbContextAdminRepository>();
                     services.AddSingleton<IStatRepository, DbContextStatRepository>();
                     services.AddSingleton<IVisitorRepository, DbContextVisitorRepository>();
-                    services.AddSingleton(typeof(IRepoContext<>), typeof(CoreDbContext<>));
+                    services.AddDbContext<CoreDbContext>(ServiceLifetime.Singleton);
                     break;
                 case DatabaseEngine.SQLServer:
                     services.AddSingleton<IConnectionFactory, SQLConnectionFactory>();

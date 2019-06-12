@@ -1,5 +1,4 @@
 ﻿using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 {
-    public class CoreDbContext<T> : DbContext, IRepoContext<T> where T : class
+    public class CoreDbContext : DbContext
     {
         private readonly string _connectionString = string.Empty;
 
@@ -18,8 +17,10 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             this.Database.EnsureCreated();            
         }
 
-        private DbSet<T> _dbSet => this.Set<T>();
-        public IQueryable<T> Entity => _dbSet;
+        public DbSet<DbStat> Stats { get; set; }
+        public DbSet<DBAdmin> Admins { get; set; }
+        public DbSet<DbVisitor> Visitors { get; set; }
+        public DbSet<DbShortUrl> ShortUrls { get; set; }
 
         public void CloseConnection()
         {
@@ -45,56 +46,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<T>();
             base.OnModelCreating(modelBuilder);
-        }
-
-        public T Add(T entity)
-        {
-            try
-            {
-                var ent = _dbSet.AddAsync(entity).Result.Entity;
-                SaveChanges();
-                Entry(ent).State = EntityState.Detached;
-                return ent;
-            }
-            catch(Exception e)
-            {
-                throw new Exception(e.Message);
-            }            
-        }
-
-        public T Update(T entity)
-        {
-            try
-            {                               
-                var ent = _dbSet.Update(entity);
-                SaveChanges();              
-                return entity;
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-
-        }
-
-        public void AddRange(IEnumerable<T> entities)
-        {
-            _dbSet.AddRange(entities);
-            SaveChanges();
-        }
-
-        public void Delete(T entity)
-        {
-            _dbSet.Remove(entity);
-            SaveChanges();
-        }
-
-        public void DeleteRange(IEnumerable<T> entities)
-        {
-            _dbSet.RemoveRange(entities);
-            SaveChanges();
         }
 
         public override int SaveChanges()

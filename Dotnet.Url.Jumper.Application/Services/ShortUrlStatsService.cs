@@ -2,6 +2,7 @@
 using Dotnet.Url.Jumper.Application.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -29,10 +30,11 @@ namespace Dotnet.Url.Jumper.Application.Services
             return _mapper.Map<IEnumerable<Stat>>(_statRepository.GetByShortUrl(Path));
         }
         public void AddShortUrlStat(ShortUrl shortUrl, Visitor visitor)
-        {
+        {            
             var stat = new Stat();
             stat.visitor = visitor;
             stat.shortUrl = shortUrl;
+            _loggerService.Info(this.GetType().ToString(), JsonConvert.SerializeObject(stat));
             _statRepository.Add(_mapper.Map<Domain.Models.Stat>(stat));
         }
     }

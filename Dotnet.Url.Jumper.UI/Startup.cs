@@ -52,6 +52,8 @@ namespace Dotnet.Url.Jumper.UI
             }
             app.UseRouting();
 
+            app.UseStaticFiles();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

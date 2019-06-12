@@ -5,7 +5,6 @@ using AutoMapper;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
 using Microsoft.Extensions.Configuration;
 
@@ -14,10 +13,10 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
     public class DbContextVisitorRepository : IVisitorRepository
     {
         private readonly ILoggerService _loggerservice;
-        private IRepoContext<DbVisitor> _context;
+        private CoreDbContext _context;
         private readonly IMapper _mapper;
 
-        public DbContextVisitorRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, IRepoContext<DbVisitor> repoContext)
+        public DbContextVisitorRepository(IConfiguration configuration, IMapper mapper, ILoggerService loggerservice, CoreDbContext repoContext)
         {            
             _context = repoContext;
             _loggerservice = loggerservice;
@@ -28,12 +27,13 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             var dbentity = _mapper.Map<DbVisitor>(entity);
             _context.Add(dbentity);
+            _context.SaveChanges();
             return _mapper.Map<Visitor>(dbentity);
         }
 
         public Visitor FindByCreationDate(DateTime creationDate)
         {
-            var admin = _context.Entity
+            var admin = _context.Visitors
                 .Where(e => e.AddedDate == creationDate).First();
             return _mapper.Map<Visitor>(admin);
         }
@@ -67,7 +67,8 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
 
             var dbentity = _mapper.Map<DbVisitor>(entity);
-            _context.Add(dbentity);
+            _context.Visitors.Add(dbentity);
+            _context.SaveChanges();
             return _mapper.Map<Visitor>(dbentity);
         }
     }

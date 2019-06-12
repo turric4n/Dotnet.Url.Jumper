@@ -6,7 +6,6 @@ using Dotnet.Url.Jumper.Domain.Exceptions;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.DBContext;
 using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
@@ -14,11 +13,11 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
     public class DbContextStatRepository : IStatRepository
     {
         private readonly ILoggerService _loggerservice;
-        private IRepoContext<DbStat> _context;
+        private CoreDbContext _context;
         private readonly IMapper _mapper;
 
         public DbContextStatRepository(IMapper mapper, ILoggerService loggerservice,
-            IRepoContext<DbStat> repoContext)
+            CoreDbContext repoContext)
         {
             _context = repoContext;
             _loggerservice = loggerservice;
@@ -32,6 +31,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
                 _loggerservice.Info(this.GetType().ToString(), "Adding new Stat to repository : ");
                 var dbentity = _mapper.Map<DbStat>(entity);
                 _context.Add(dbentity);
+                _context.SaveChanges();
                 _loggerservice.Success(this.GetType().ToString(), "Added new Stat to repository : ");
                 return _mapper.Map<Stat>(dbentity);
             }
@@ -45,7 +45,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                var Stat = _context.Entity
+                var Stat = _context.Stats
                     .Where(e => e.AddedDate == creationDate)
                     .First();
                 return _mapper.Map<Stat>(Stat);
@@ -60,7 +60,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                var Stat = _context.Entity
+                var Stat = _context.Stats
                     .Where(e => e.Id == id).First();
                 return _mapper.Map<Stat>(Stat);
             }
@@ -75,7 +75,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                var Stat = _context.Entity
+                var Stat = _context.Stats
                     .Where(e => e.ModifiedDate == modificationDate).First();
                 return _mapper.Map<Stat>(Stat);
             }
@@ -90,7 +90,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 _loggerservice.Info(this.GetType().ToString(), "Retrieving Stats from repository.");
-                var Stats = _context.Entity
+                var Stats = _context.Stats
                     .ToList();
                 _loggerservice.Success(this.GetType().ToString(), "Retrieving Stats from repository.");
                 return _mapper.Map<IEnumerable<Stat>>(Stats);
@@ -105,11 +105,10 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                _context.Delete(
-                    _context.Entity
-                    .Where(x => x.Id == id)
-                    .First()
-                );
+                var Stat = _context.Stats
+                    .Where(e => e.Id == id).First();
+                _context.Stats.Remove(Stat);
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -122,7 +121,8 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var Stat = _mapper.Map<DbStat>(entity);
-                _context.Update(Stat);
+                _context.Stats.Add(Stat);
+                _context.SaveChanges();
                 return _mapper.Map<Stat>(Stat);
             }
             catch (Exception ex)
@@ -135,7 +135,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                var entities = _context.Entity
+                var entities = _context.Stats
                     .Where(x => x.shortUrl.ShortenedUrl == ShortUrl)
                     .ToList();
                 return _mapper.Map<IEnumerable<Stat>>(entities);
@@ -150,7 +150,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                var entities = _context.Entity
+                var entities = _context.Stats
                     .Where(x => x.shortUrl.OriginalUrl == OriginalUrl)
                     .ToList();                    
                 return _mapper.Map<IEnumerable<Stat>>(entities);
