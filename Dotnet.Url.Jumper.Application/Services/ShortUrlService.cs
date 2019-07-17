@@ -77,5 +77,10 @@ namespace Dotnet.Url.Jumper.Application.Services
             else { _loggerservice.Success(this.GetType().ToString(), "shorturl get from cache : " + path); }            
             return shorturl;           
         }
+
+        public void ValidateShortUrl(string ShortUrl)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

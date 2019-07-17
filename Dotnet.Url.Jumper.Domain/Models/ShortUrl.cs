@@ -10,7 +10,7 @@ namespace Dotnet.Url.Jumper.Domain.Models
     {
         private int redirectionCode;
 
-        public int Id { get; set; }
+        public int Id { get; set; }             
         public string OriginalUrl { get; set; }
         public string ShortenedUrl { get; set; }
         public int RedirectionCode { get => redirectionCode; set 
