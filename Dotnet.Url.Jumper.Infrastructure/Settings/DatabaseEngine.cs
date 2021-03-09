@@ -3,6 +3,7 @@
     public enum DatabaseEngine
     {
         EntityFrameworkSQLite,
-        SQLServer
+        EntityFrameworkSQL,
+        Dapper
     }
 }

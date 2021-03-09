@@ -20,6 +20,11 @@ namespace Dotnet.Url.Jumper.Infrastructure.Persistence.Repositories.Mocked
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Admin> FindBetween(DateTime from, DateTime to)
+        {
+            throw new NotImplementedException();
+        }
+
         public Admin FindByCreationDate(DateTime creationDate)
         {
             throw new NotImplementedException();

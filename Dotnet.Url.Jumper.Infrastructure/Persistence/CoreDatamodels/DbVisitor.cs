@@ -7,6 +7,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels
     public class DbVisitor : CoreDbEntity
     {
         public string ClientIP { get; set; }
-        public string Referer { get; set; }        
+        public string Referer { get; set; }         
+        public string UserAgent { get; set; }
     }
 }

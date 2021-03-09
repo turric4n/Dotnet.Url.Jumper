@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "providerProps": {
+        "providerName": "Console Provider",
+        "providerType": "ConsoleProvider",
+        "providerInfo": {
+          "LogLevel": "[etHeader,etInfo,etSuccess,etWarning,etError,etCritical,etException,etDebug,etTrace,etDone,etCustom1,etCustom2]",
+          "ShowEventColors": true,
+          "ShowTimeStamp": true,
+          "TimePrecission": true,
+          "ShowEventType": true
+        }
+      }
+    }
+  ]
+}

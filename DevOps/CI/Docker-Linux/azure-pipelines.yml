@@ -1,0 +1,47 @@
+trigger:
+- release
+
+pool:
+  name: 'Docker-Agent-Pool'
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:    
+    command: restore    
+    projects: Dotnet.Url.Jumper.UI/Dotnet.Url.Jumper.UI.csproj 
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: Dotnet.Url.Jumper.UI/Dotnet.Url.Jumper.UI.csproj
+    arguments: '--configuration $(BuildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: Dotnet.Url.Jumper.UI/Dotnet.Url.Jumper.UI.csproj
+    arguments: '--configuration $(BuildConfiguration) --output $(build.artifactstagingdirectory) /p:Configuration=release'
+    zipAfterPublish: false
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)/Dotnet.Url.Jumper.UI'
+  inputs:
+    SourceFolder: DevOps/Docker-Linux
+    Contents: '*'
+    TargetFolder: '$(build.artifactstagingdirectory)/Dotnet.Url.Jumper.UI'
+
+- task: Docker@1
+  displayName: 'Build an Image'
+  inputs:
+    command: 'Build an image'
+    dockerFile: '$(build.artifactstagingdirectory)/Dotnet.Url.Jumper.UI/Dockerfile'
+    imageName: 'Dotnet.Url.Jumper.UI:$(Build.BuildId)'
+    qualifyImageName: true
+    useDefaultContext: true

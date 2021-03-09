@@ -9,11 +9,11 @@ namespace Dotnet.Url.Jumper.Domain.Models
     public class ShortUrl
     {
         private int redirectionCode;
-
-        public int Id { get; set; }
+        public int Id { get; set; }                     
         public string OriginalUrl { get; set; }
         public string ShortenedUrl { get; set; }
-        public int RedirectionCode { get => redirectionCode; set 
+        public int RedirectionCode {
+            get => redirectionCode; set 
             {
                 if (value == 0 || (value >= 301 && value <= 308))
                 {

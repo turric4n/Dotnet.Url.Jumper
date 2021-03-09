@@ -9,5 +9,6 @@ namespace Dotnet.Url.Jumper.Domain.Repositories
     {
         ShortUrl GetByPath(string Path);
         ShortUrl GetByOriginalUrl(string Url);
+        void DeleteById(int id);
     }
 }

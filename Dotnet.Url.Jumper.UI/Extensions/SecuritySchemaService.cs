@@ -20,8 +20,13 @@ namespace Dotnet.Url.Jumper.UI.Security
                     services.AddBearerAuthentication(services.BuildServiceProvider().GetRequiredService<ISecurityValidatorService>());
                     break;
                 case SecuritySchema.ApiKey:
-                    services.AddScoped<ISecurityValidatorService, ApiKeySecretValidatorService>();                    
-                    services.AddApiKeyAuthorization(services.BuildServiceProvider().GetRequiredService<ISecurityValidatorService>());
+                    services.AddScoped<ISecurityValidatorService, ApiKeySecretValidatorService>();
+                    services.AddAuthentication(options =>
+                    {
+                        options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                        options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
+                    })
+                        .AddApiKeySupport(options => { });
                     break;
             }           
         }

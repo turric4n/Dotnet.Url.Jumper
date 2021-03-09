@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Dotnet.Url.Jumper.Domain.Exceptions;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 {
     public class DbContextStatRepository : IStatRepository
     {
-        private readonly ILoggerService _loggerservice;
+        private readonly ILogger<DbContextStatRepository> _loggerservice;
         private CoreDbContext _context;
         private readonly IMapper _mapper;
 
-        public DbContextStatRepository(IMapper mapper, ILoggerService loggerservice,
+        public DbContextStatRepository(IMapper mapper, ILogger<DbContextStatRepository> loggerservice,
             CoreDbContext repoContext)
         {
             _context = repoContext;
@@ -24,20 +26,22 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             _mapper = mapper;
         }
 
-        public Stat Add(Stat entity)
+        public Stat Add(Domain.Models.Stat entity)
         {
+            var entitystring = JsonConvert.SerializeObject(entity);
+            _loggerservice.LogInformation("Adding new Stat to repository : " + entitystring);
             try
-            {
-                _loggerservice.Info(this.GetType().ToString(), "Adding new Stat to repository : ");
-                var dbentity = _mapper.Map<DbStat>(entity);
+            {                                
+                var dbentity = _mapper.Map<DbStat>(entity);                
                 _context.Add(dbentity);
+                _context.Attach(dbentity.shortUrl);
                 _context.SaveChanges();
-                _loggerservice.Success(this.GetType().ToString(), "Added new Stat to repository : ");
-                return _mapper.Map<Stat>(dbentity);
+                _loggerservice.LogInformation("Added new Stat to repository : " + entitystring);
+                return _mapper.Map<Domain.Models.Stat>(dbentity);
             }
             catch (Exception ex)
             {
-                throw new RepositoryException("Error adding new Stat into repository. " + ex.Message);
+                throw new RepositoryException("Error adding new Stat into repository. " + entitystring + " " + ex.Message);
             }
         }
 
@@ -46,9 +50,12 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var Stat = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
                     .Where(e => e.AddedDate == creationDate)
                     .First();
-                return _mapper.Map<Stat>(Stat);
+                return _mapper.Map<Domain.Models.Stat>(Stat);
             }
             catch (Exception ex)
             {
@@ -61,8 +68,11 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var Stat = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
                     .Where(e => e.Id == id).First();
-                return _mapper.Map<Stat>(Stat);
+                return _mapper.Map<Domain.Models.Stat>(Stat);
             }
             catch (Exception ex)
             {
@@ -76,8 +86,11 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var Stat = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
                     .Where(e => e.ModifiedDate == modificationDate).First();
-                return _mapper.Map<Stat>(Stat);
+                return _mapper.Map<Domain.Models.Stat>(Stat);
             }
             catch (Exception ex)
             {
@@ -85,15 +98,19 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             }
         }
 
-        public IEnumerable<Stat> List()
+        public IEnumerable<Domain.Models.Stat> List()
         {
             try
             {
-                _loggerservice.Info(this.GetType().ToString(), "Retrieving Stats from repository.");
+                _loggerservice.LogInformation("Retrieving Stats from repository.");
                 var Stats = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
+                    .OrderBy(x => x.AddedDate)
                     .ToList();
-                _loggerservice.Success(this.GetType().ToString(), "Retrieving Stats from repository.");
-                return _mapper.Map<IEnumerable<Stat>>(Stats);
+                _loggerservice.LogInformation("Retrieving Stats from repository.");
+                return _mapper.Map<IEnumerable<Domain.Models.Stat>>(Stats);
             }
             catch (Exception ex)
             {
@@ -116,14 +133,15 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             }
         }
 
-        public Stat Update(Stat entity)
+        public Stat Update(Domain.Models.Stat entity)
         {
             try
             {
-                var Stat = _mapper.Map<DbStat>(entity);
-                _context.Stats.Add(Stat);
+                var stat = _mapper.Map<DbStat>(entity);
+                _context.Stats
+                    .Add(stat);
                 _context.SaveChanges();
-                return _mapper.Map<Stat>(Stat);
+                return _mapper.Map<Domain.Models.Stat>(stat);
             }
             catch (Exception ex)
             {
@@ -131,14 +149,17 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             }
         }
 
-        public IEnumerable<Stat> GetByShortUrl(string ShortUrl)
+        public IEnumerable<Domain.Models.Stat> GetByShortUrl(string ShortUrl)
         {
             try
             {
                 var entities = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
                     .Where(x => x.shortUrl.ShortenedUrl == ShortUrl)
                     .ToList();
-                return _mapper.Map<IEnumerable<Stat>>(entities);
+                return _mapper.Map<IEnumerable<Domain.Models.Stat>>(entities);
             }
             catch (Exception ex)
             {
@@ -146,18 +167,40 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             }
         }
 
-        public IEnumerable<Stat> GetByOriginalUrl(string OriginalUrl)
+        public IEnumerable<Domain.Models.Stat> GetByOriginalUrl(string OriginalUrl)
         {
             try
             {
                 var entities = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
                     .Where(x => x.shortUrl.OriginalUrl == OriginalUrl)
                     .ToList();                    
-                return _mapper.Map<IEnumerable<Stat>>(entities);
+                return _mapper.Map<IEnumerable<Domain.Models.Stat>>(entities);
             }
             catch (Exception ex)
             {
                 throw new RepositoryException("Error retrieving Stats from repository by OriginalUrl. " + ex.Message);
+            }
+        }
+
+        public IEnumerable<Domain.Models.Stat> FindBetween(DateTime from, DateTime to)
+        {
+            try
+            {                
+                var entities = _context.Stats
+                    .AsNoTracking()
+                    .Include(v => v.visitor)
+                    .Include(s => s.shortUrl)
+                    .Where(x => x.AddedDate >= from && x.AddedDate <= to)
+                    .OrderBy(x => x.AddedDate)                    
+                    .ToList();
+                return _mapper.Map<IEnumerable<Domain.Models.Stat>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new RepositoryException("Error retrieving Stats from repository by Between. " + ex.Message);
             }
         }
     }

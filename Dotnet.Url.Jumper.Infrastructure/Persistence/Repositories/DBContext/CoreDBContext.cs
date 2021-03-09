@@ -1,8 +1,11 @@
 ﻿using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
+using Dotnet.Url.Jumper.Infrastructure.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
@@ -10,11 +13,16 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
     public class CoreDbContext : DbContext
     {
         private readonly string _connectionString = string.Empty;
+        private readonly IOptions<InfrastructureSettings> _settings;
+        private readonly ILogger<CoreDbContext> _logger;
 
-        public CoreDbContext(IConfiguration configuration) : base()
+        public CoreDbContext(IConfiguration configuration, IOptions<InfrastructureSettings> settings, 
+            ILogger<CoreDbContext> logger) : base()
         {
-            _connectionString = configuration.GetConnectionString("CoreConnectionString");            
-            this.Database.EnsureCreated();            
+            _connectionString = configuration.GetConnectionString("CoreConnection");
+            _settings = settings;
+            _logger = logger;
+            Database.EnsureCreated();     
         }
 
         public DbSet<DbStat> Stats { get; set; }
@@ -40,12 +48,22 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString);
+            if (_settings.Value.databaseEngine == "EntityFrameworkSQLite")
+            {
+                optionsBuilder.UseSqlite(_connectionString);                
+            }
+            else
+            {
+                optionsBuilder.UseSqlServer(_connectionString);
+            }
+            //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //modelBuilder.Entity<DbStat>().Property(e => e.shortUrl).ValueGeneratedNever();
+            //modelBuilder.Entity<DbStat>().Property(e => e.visitor).ValueGeneratedNever();
             base.OnModelCreating(modelBuilder);
         }
 

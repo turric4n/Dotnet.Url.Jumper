@@ -8,7 +8,9 @@ using Dotnet.Url.Jumper.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 
 namespace Dotnet.Url.Jumper.UI.Controllers
 {
@@ -18,10 +20,12 @@ namespace Dotnet.Url.Jumper.UI.Controllers
     public class ShortUrlAdminController : ControllerBase
     {
         private readonly IShortUrlService _shorturlservice;
+        private readonly ILogger<ShortUrlAdminController> _loggerservice;
 
-        public ShortUrlAdminController(IShortUrlService shorturlservice)
+        public ShortUrlAdminController(IShortUrlService shorturlservice, ILogger<ShortUrlAdminController> loggerService)
         {
             _shorturlservice = shorturlservice;
+            _loggerservice = loggerService;
         }
         [HttpGet]
         public IEnumerable<ShortUrl> GetAll()
@@ -29,7 +33,7 @@ namespace Dotnet.Url.Jumper.UI.Controllers
             return _shorturlservice.GetAll();
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet("{id}")]
         public ShortUrl GetById(int id)
         {
             return _shorturlservice.GetById(id);
@@ -48,6 +52,21 @@ namespace Dotnet.Url.Jumper.UI.Controllers
                 var exc = ex.InnerException ?? ex;
                 return StatusCode((int)HttpStatusCode.InternalServerError, exc);
             }            
-        } 
+        }               
+        [HttpDelete("{id}")]
+        public IActionResult DeleteById(int id)
+        {
+            try
+            {
+                _shorturlservice.DeleteById(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                var exc = ex.InnerException ?? ex;                
+                _loggerservice.LogError("Delete error " + exc.Message);
+                return StatusCode((int)HttpStatusCode.InternalServerError, exc);
+            }
+        }
     }
 }

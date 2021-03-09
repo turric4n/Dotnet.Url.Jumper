@@ -15,5 +15,9 @@ namespace Dotnet.Url.Jumper.Application.Services
         ShortUrl GetByPath(string path);
 
         ShortUrl GetByOriginalUrl(string originalUrl);
+
+        void DeleteById(int id);
+
+        void ValidateShortUrl(string ShortUrl);
     }
 }

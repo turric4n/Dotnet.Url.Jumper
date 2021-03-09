@@ -10,5 +10,6 @@ namespace Dotnet.Url.Jumper.Domain.Repositories
         T FindById(TType id);
         T FindByCreationDate(DateTime creationDate);
         T FindByModificationDate(DateTime modificationDate);
+        IEnumerable<T> FindBetween(DateTime from, DateTime to);
     }
 }

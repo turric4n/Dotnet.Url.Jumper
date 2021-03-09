@@ -6,18 +6,19 @@ using Dotnet.Url.Jumper.Domain.Exceptions;
 using Dotnet.Url.Jumper.Domain.Models;
 using Dotnet.Url.Jumper.Domain.Repositories;
 using Dotnet.Url.Jumper.Infrastructure.Persistence.CoreDatamodels;
-using Dotnet.Url.Jumper.Infrastructure.Services.Logger;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
 
 namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
 {
     public class DbContextShortUrlRepository : IShortUrlRepository
     {
-        private readonly ILoggerService _loggerservice;
+        private readonly ILogger<DbContextShortUrlRepository> _loggerservice;
         private CoreDbContext _context;
         private readonly IMapper _mapper;
 
-        public DbContextShortUrlRepository(IMapper mapper, ILoggerService loggerservice, 
+        public DbContextShortUrlRepository(IMapper mapper, ILogger<DbContextShortUrlRepository> loggerservice, 
             CoreDbContext repoContext)
         {
             _context = repoContext;
@@ -29,12 +30,12 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                _loggerservice.Info(this.GetType().ToString(), "Adding new ShortURL to repository : " + entity.OriginalUrl + " , ");
+                _loggerservice.LogInformation("Adding new ShortURL to repository : " + entity.OriginalUrl + " , ");
                 var dbentity = _mapper.Map<DbShortUrl>(entity);
                 _context.ShortUrls.Add(dbentity);
                 _context.SaveChanges();
                 _context.Entry(dbentity).State = EntityState.Detached;
-                _loggerservice.Success(this.GetType().ToString(), "Added new ShortURL to repository : " + entity.OriginalUrl + " , ");
+                _loggerservice.LogInformation("Added new ShortURL to repository : " + entity.OriginalUrl + " , ");
                 return _mapper.Map<ShortUrl>(dbentity);
             }
             catch (Exception ex)
@@ -48,6 +49,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var shorturl = _context.ShortUrls
+                    .AsNoTracking()
                     .Where(e => e.AddedDate == creationDate)
                     .First();
                 return _mapper.Map<ShortUrl>(shorturl);
@@ -63,6 +65,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var shorturl = _context.ShortUrls
+                    .AsNoTracking()
                     .Where(e => e.Id == id).First();
                 return _mapper.Map<ShortUrl>(shorturl);
             }
@@ -78,6 +81,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var shorturl = _context.ShortUrls
+                    .AsNoTracking()
                     .Where(e => e.ModifiedDate == modificationDate).First();
                 return _mapper.Map<ShortUrl>(shorturl);
             }
@@ -91,10 +95,11 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
         {
             try
             {
-                _loggerservice.Info(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
+                _loggerservice.LogInformation(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
                 var shorturls = _context.ShortUrls
+                    .AsNoTracking()
                     .ToList();
-                _loggerservice.Success(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
+                _loggerservice.LogInformation(this.GetType().ToString(), "Retrieving ShortURLs from repository.");
                 return _mapper.Map<IEnumerable<ShortUrl>>(shorturls);
             }
             catch (Exception ex)
@@ -138,8 +143,9 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var entity = _context.ShortUrls
+                    .AsNoTracking()
                     .Where(x => x.ShortenedUrl == Path)
-                    .First();
+                    .FirstOrDefault();
                 return _mapper.Map<ShortUrl>(entity);
             }
             catch (Exception ex)
@@ -153,6 +159,7 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             try
             {
                 var entity = _context.ShortUrls
+                    .AsNoTracking()
                     .Where(x => x.OriginalUrl == Url)
                     .First();
                 return _mapper.Map<ShortUrl>(entity);
@@ -161,6 +168,16 @@ namespace Dotnet.Url.Jumper.Infrastructure.Repositories.DBContext
             {
                 throw new RepositoryException("Error retrieving ShortUrl from repository from OriginalUrl. " + ex.Message);
             }
+        }
+
+        public void DeleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ShortUrl> FindBetween(DateTime from, DateTime to)
+        {
+            throw new NotImplementedException();
         }
     }
 }

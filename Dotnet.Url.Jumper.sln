@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet.Url.Jumper.Application", "Dotnet.Url.Jumper.Application\Dotnet.Url.Jumper.Application.csproj", "{C8EB5F44-4429-4863-8054-7A9BDD42F39F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotnet.Url.Jumper.Stats.Sender", "Dotnet.Url.Jumper.Stats.Sender\Dotnet.Url.Jumper.Stats.Sender.csproj", "{357B36FD-8F27-4278-8ADD-73F4B44858FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,14 @@ Global
 		{C8EB5F44-4429-4863-8054-7A9BDD42F39F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8EB5F44-4429-4863-8054-7A9BDD42F39F}.Release|x86.ActiveCfg = Release|x86
 		{C8EB5F44-4429-4863-8054-7A9BDD42F39F}.Release|x86.Build.0 = Release|x86
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Debug|x86.Build.0 = Debug|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{357B36FD-8F27-4278-8ADD-73F4B44858FD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

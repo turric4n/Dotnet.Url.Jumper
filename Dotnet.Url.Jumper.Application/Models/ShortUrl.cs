@@ -6,6 +6,12 @@ namespace Dotnet.Url.Jumper.Application.Models
 {
     public class ShortUrl
     {
+        public ShortUrl()
+        {
+            AddedDate = DateTime.Now;
+            ModifiedDate = DateTime.Now;
+        }
+
         public int Id { get; set; }
         public string OriginalUrl { get; set; }
         public string ShortenedUrl { get; set; }

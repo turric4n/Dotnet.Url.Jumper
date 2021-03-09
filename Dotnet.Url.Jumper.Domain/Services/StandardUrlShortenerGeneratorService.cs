@@ -23,6 +23,7 @@ namespace Dotnet.Url.Jumper.Domain.Services
      * Example output:
      * 123456789 <=> pgK8p
      */
+
     public class StandardUrlShortenerService : IUrlShortenerGeneratorService
     {       
         private const string Alphabet = "23456789bcdfghjkmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ-_";
@@ -31,7 +32,7 @@ namespace Dotnet.Url.Jumper.Domain.Services
         public StandardUrlShortenerService()
         {
         }
-
+        
         public string Encode(int num)
         {
             var sb = new StringBuilder();
