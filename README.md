@@ -5,4 +5,4 @@ Just another URL shortener and redirector with a lot of customizable things
 
 TO-DO documentation!!
 
-Now works with Windows Containers
+Now works with Docker!
