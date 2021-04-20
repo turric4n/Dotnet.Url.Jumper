@@ -24,8 +24,7 @@ jobs:
     - name: Publish
       run: dotnet publish --configuration Release
     - name: Copy dockerfile  
-      uses: canastro/copy-action@0.0.2
+      uses: workflow/nix-shell-action@v1
       with:
-       source: /home/runner/work/Dotnet.Url.Jumper/DevOps/Docker-Linux/Dockerfile
-       target: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/Dotnet.Url.Jumper.UI/bin/Release/net5.0/publish/
+       script: cp /home/runner/work/Dotnet.Url.Jumper/DevOps/Docker-Linux/Dockerfile /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/Dotnet.Url.Jumper.UI/bin/Release/net5.0/publish/
     - uses: docker/build-push-action@v2.4.0      
