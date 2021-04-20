@@ -22,11 +22,11 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
     - name: Publish
-      run: dotnet publish
+      run: dotnet publish --configuration Release
     - name: Copy dockerfile  
       uses: canastro/copy-action@0.0.2
       with:
-       source: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/DevOps/*
-       target: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/Dotnet.Url.Jumper.UI/bin/Debug/net5.0/publish/
+       source: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/DevOps/Dockerfile
+       target: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/Dotnet.Url.Jumper.UI/bin/Release/net5.0/publish/
     - uses: docker/setup-buildx-action@v1.1.2
     
