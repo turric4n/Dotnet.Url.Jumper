@@ -26,6 +26,6 @@ jobs:
     - name: Copy dockerfile  
       uses: canastro/copy-action@0.0.2
       with:
-       source: /home/runner/work/Dotnet.Url.Jumper/DevOps/DevOps/Docker-Linux/Dockerfile
+       source: /home/runner/work/Dotnet.Url.Jumper/DevOps/Docker-Linux/Dockerfile
        target: /home/runner/work/Dotnet.Url.Jumper/Dotnet.Url.Jumper/Dotnet.Url.Jumper.UI/bin/Release/net5.0/publish/
     - uses: docker/build-push-action@v2.4.0      
